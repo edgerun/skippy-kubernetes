@@ -1,31 +1,31 @@
+import logging
 from typing import List
 
 from kubernetes import client
 from kubernetes.client import CoreV1Api, V1Node
 from core.clustercontext import ClusterContext
 from core.model import Node, Capacity, Pod, ImageState
+from core.utils import parse_size_string
 
 
 class KubeClusterContext(ClusterContext):
-
     api: CoreV1Api
+    nodes: [Node] = None
 
     def __init__(self, target_namespace: str):
+        super().__init__()
         self.target_namespace = target_namespace
         self.api = CoreV1Api()
 
-    def __create_capacity(self, v1node: V1Node) -> Capacity:
-        # TODO create Capacity from Node Status
-        # capacity = Capacity(v1node.status[''])
-        # return capacity
-        pass
-
     @staticmethod
     def __create_node(v1node: V1Node) -> Node:
-        #  self, name: str, capacity: Capacity = None, allocatable: Capacity = None,
-        #  labels: Dict[str, str] = None) -> None:
-        # TODO create Node from V1Node
-        return Node(v1node.metadata.name)
+        name = v1node.metadata.name
+        labels = v1node.metadata.labels
+        cpu_millis = int(v1node.status.capacity['cpu']) * 1000
+        memory = parse_size_string(v1node.status.capacity['memory'])
+        capacity = Capacity(cpu_millis, memory)
+        allocatable = Capacity(cpu_millis, memory)
+        return Node(name=name, labels=labels, capacity=capacity, allocatable=allocatable)
 
     def __create_nodes(self, v1nodes: List[V1Node]) -> List[Node]:
         return [self.__create_node(node) for node in v1nodes]
@@ -43,11 +43,14 @@ class KubeClusterContext(ClusterContext):
         meta = client.V1ObjectMeta()
         meta.name = pod.name
         body = client.V1Binding(target=target, metadata=meta)
-        self.api.create_namespaced_binding(self.target_namespace, body)
-
-    def retrieve_image_state(self, image_name: str) -> ImageState:
-        # TODO use a docker hub api to get the image size of the requested docker image
-        pass
+        logging.info('Was about to send placement, but were only testing here...')
+        # TODO revert self.api.create_namespaced_binding(self.target_namespace, body)
 
     def list_nodes(self):
-        return self.__create_nodes(self.api.list_node().items)
+        # TODO refresh node data but make sure to keep remaining capacities (allocatable)
+        # Maybe implement a timeout to not request the data with every single pod placement?
+        # Maybe also implement taking the images on the nodes from the node data (node.status.images.names contains
+        # the tags, the sizes however aren't relevant as these are the unzipped ones)
+        if self.nodes is None:
+            self.nodes = self.__create_nodes(self.api.list_node().items)
+        return self.nodes
