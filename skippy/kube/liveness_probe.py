@@ -8,9 +8,9 @@ class LivenessProbe:
         class HealthRequestHandler(BaseHTTPRequestHandler):
             def do_GET(self):
                 self.send_response(200)
-                self.send_header("Content-type", "text/plain")
+                self.send_header('Content-type', 'text/plain')
                 self.end_headers()
-                self.wfile.write(b"Everything's lookin' good.")
+                self.wfile.write(b'Everything\'s lookin\' good.')
                 return
         httpd = HTTPServer(('', port), HealthRequestHandler)
         httpd.serve_forever()

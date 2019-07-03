@@ -21,14 +21,14 @@ class KubeClusterContext(ClusterContext):
 
         # But also actually create the placmement in kubernetes
         target = client.V1ObjectReference()
-        target.kind = ""
-        target.apiVersion = "v1"
+        target.kind = ''
+        target.apiVersion = 'v1'
         target.name = node.name
 
         meta = client.V1ObjectMeta()
         meta.name = pod.name
         body = client.V1Binding(target=target, metadata=meta)
-        logging.info('Was about to send placement, but were only testing here...')
+        logging.info('Creating namespaced binding: Pod %s on Node %s', pod.name, node.name)
         self.api.create_namespaced_binding(pod.namespace, body)
 
     def list_nodes(self):
