@@ -80,11 +80,6 @@ def main():
         except ApiException as e:
             # Parse the JSON message body of the exception
             logging.exception('ApiExceptionMessage: %s', json.loads(e.body)['message'])
-        except ValueError:
-            # Due to a bug in the library, an error was thrown (but everything most likely worked fine).
-            # https://github.com/kubernetes-client/python/issues/547
-            logging.exception('ValueError in outer event loop caught. '
-                              'This could be caused by https://github.com/kubernetes-client/python/issues/547.')
         except Exception:
             # We really don't want the scheduler to die, therefore we catch Exception here
             logging.exception('Exception in outer event loop caught. '

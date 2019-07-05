@@ -29,7 +29,12 @@ class KubeClusterContext(ClusterContext):
         meta.name = pod.name
         body = client.V1Binding(target=target, metadata=meta)
         logging.info('Creating namespaced binding: Pod %s on Node %s', pod.name, node.name)
-        self.api.create_namespaced_binding(pod.namespace, body)
+        try:
+            self.api.create_namespaced_binding(pod.namespace, body)
+        except ValueError:
+            # Due to a bug in the library, an error was thrown (but everything most likely worked fine).
+            # https://github.com/kubernetes-client/python/issues/547
+            pass
 
     def list_nodes(self):
         # TODO refresh node data but make sure to keep remaining capacities (allocatable)
