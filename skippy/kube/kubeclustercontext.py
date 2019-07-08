@@ -17,9 +17,9 @@ class KubeClusterContext(ClusterContext):
         super().__init__()
         self.api = CoreV1Api()
 
-    def get_next_storage_node(self, node: Node):
+    def get_next_storage_node(self, node: Node) -> str:
         # TODO find the nearest one (instead of assuming there's only one)
-        return self.storage_node
+        return self.storage_node.name
 
     def place_pod_on_node(self, pod: Pod, node: Node):
         # Update the internal state of the super class
