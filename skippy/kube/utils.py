@@ -34,6 +34,7 @@ def create_container(container: V1Container) -> Container:
 def create_pod(pod: V1Pod) -> Pod:
     name = pod.metadata.name
     containers = [create_container(c) for c in pod.spec.containers]
+    labels = pod.metadata.labels
     namespace = pod.metadata.namespace
-    spec: PodSpec = PodSpec(containers)
+    spec: PodSpec = PodSpec(containers, labels)
     return Pod(name, namespace, spec)

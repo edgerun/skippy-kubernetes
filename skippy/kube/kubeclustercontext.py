@@ -8,12 +8,18 @@ from kube.utils import create_nodes
 
 
 class KubeClusterContext(ClusterContext):
+
     api: CoreV1Api
     nodes: [Node] = None
+    storage_node: Node
 
     def __init__(self: str):
         super().__init__()
         self.api = CoreV1Api()
+
+    def get_next_storage_node(self, node: Node):
+        # TODO find the nearest one (instead of assuming there's only one)
+        return self.storage_node
 
     def place_pod_on_node(self, pod: Pod, node: Node):
         # Update the internal state of the super class
@@ -43,4 +49,5 @@ class KubeClusterContext(ClusterContext):
         # the tags, the sizes however aren't relevant as these are the unzipped ones)
         if self.nodes is None:
             self.nodes = create_nodes(self.api.list_node().items)
+            self.storage_node = next(node for node in self.nodes if 'data.skippy.io/storage-node' in node.labels)
         return self.nodes
