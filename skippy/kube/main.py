@@ -67,23 +67,26 @@ def main():
 
     # Main event loop watching for new pods
     logging.info('Everything is in place for new pods to be scheduled. Waiting for new events...')
-    for event in stream:
-        # noinspection PyBroadException
-        try:
-            if event['object'].status.phase == 'Pending' and \
-                    (scheduler_name is None or event['object'].spec.scheduler_name == scheduler_name) and \
-                    event['type'] == 'ADDED':
-                pod = create_pod(event['object'])
-                logging.debug('There\'s a new pod to schedule: ' + pod.name)
-                result = scheduler.schedule(pod)
-                logging.debug('Pod yielded %s', result)
-        except ApiException as e:
-            # Parse the JSON message body of the exception
-            logging.exception('ApiExceptionMessage: %s', json.loads(e.body)['message'])
-        except Exception:
-            # We really don't want the scheduler to die, therefore we catch Exception here
-            logging.exception('Exception in outer event loop caught. '
-                              'It will be ignored to make sure the scheduler continues to run.')
+    try:
+        for event in stream:
+            # noinspection PyBroadException
+            try:
+                if event['object'].status.phase == 'Pending' and \
+                        (scheduler_name is None or event['object'].spec.scheduler_name == scheduler_name) and \
+                        event['type'] == 'ADDED':
+                    pod = create_pod(event['object'])
+                    logging.debug('There\'s a new pod to schedule: ' + pod.name)
+                    result = scheduler.schedule(pod)
+                    logging.debug('Pod yielded %s', result)
+            except ApiException as e:
+                # Parse the JSON message body of the exception
+                logging.exception('ApiExceptionMessage: %s', json.loads(e.body)['message'])
+            except Exception:
+                # We really don't want the scheduler to die, therefore we catch Exception here
+                logging.exception('Exception in outer event loop caught. '
+                                  'It will be ignored to make sure the scheduler continues to run.')
+    except KeyboardInterrupt:
+        logging.info('Shutting down after receiving a keyboard interrupt.')
 
 
 if __name__ == '__main__':
