@@ -1,6 +1,6 @@
+import argparse
 import json
 import logging
-import argparse
 
 from kubernetes import config, watch, client
 from kubernetes.client.rest import ApiException
