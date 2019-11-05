@@ -8,7 +8,7 @@ from kubernetes.client.rest import ApiException
 from pandas.tests.extension.numpy_.test_numpy_nested import np
 
 from core.priorities import Priority, BalancedResourcePriority, LatencyAwareImageLocalityPriority, LocalityTypePriority, \
-    DataLocalityPriority, CapabilityPriority
+    DataLocalityPriority, CapabilityPriority, ImageLocalityPriority
 from core.scheduler import Scheduler
 from kube.kubeclustercontext import KubeClusterContext
 from kube.liveness_probe import LivenessProbe
@@ -25,7 +25,10 @@ def main():
     parser.add_argument('-n', '--namespace', action='store', dest='namespace',
                         help='Only watch pods of a specific namespace.')
     parser.add_argument('-w', '--weights', action='store', dest='weights',
-                        help='An array of floats defining the weights of the different priority functions')
+                        help='An array of floats defining the weights of the different priority functions',
+                        default=None)
+    parser.add_argument('-u', '--use-default', action='store_true', dest='default',
+                        help='Use the predicate and priority functions of the default scheduler.', default=False)
     parser.add_argument('-c', '--kube-config', action='store_true', dest='kube_config',
                         help='Load kube-config from home dir instead of in-cluster-config from envs.', default=False)
     parser.add_argument('-d', '--debug', action='store_true', dest='debug',
@@ -34,7 +37,7 @@ def main():
     level = logging.DEBUG if args.debug else logging.INFO
     scheduler_name = None if args.scheduler_name == 'None' else args.scheduler_name
     namespace = None if args.namespace == 'None' else args.namespace
-    weights = None if args.weights == 'None' \
+    weights = None if args.weights is None \
         else [np.float64(x) for x in ast.literal_eval(args.weights)]
 
     # Set the log level
@@ -56,12 +59,19 @@ def main():
     # Initialize the API, context and scheduler
     cluster_context = KubeClusterContext()
     api = client.CoreV1Api()
-    priorities = None if weights is None \
-        else [(weights[0], BalancedResourcePriority()),
-              (weights[1], LatencyAwareImageLocalityPriority()),
-              (weights[2], LocalityTypePriority()),
-              (weights[3], DataLocalityPriority()),
-              (weights[4], CapabilityPriority())]
+    if args.default:
+        logging.debug('Using default scheduler priority functions')
+        priorities = [(1.0, BalancedResourcePriority()),
+                      (1.0, ImageLocalityPriority())] if weights is None \
+            else [(weights[0], BalancedResourcePriority()),
+                  (weights[1], ImageLocalityPriority())]
+    else:
+        priorities = None if weights is None \
+            else [(weights[0], BalancedResourcePriority()),
+                  (weights[1], LatencyAwareImageLocalityPriority()),
+                  (weights[2], LocalityTypePriority()),
+                  (weights[3], DataLocalityPriority()),
+                  (weights[4], CapabilityPriority())]
     scheduler = Scheduler(cluster_context, priorities=priorities)
 
     # Either watch all namespaces or only the one set as argument
