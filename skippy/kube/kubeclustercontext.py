@@ -73,6 +73,36 @@ class KubeClusterContext(ClusterContext):
                 'arm': 506769993,
                 'arm64': 585625232,
                 'amd64': 585928717
+            }),
+            'alexrashed/ml-wf-1-pre:0.34': ImageState(size={
+                'arm': 465830200,
+                'arm64': 540391110,
+                'amd64': 533323136
+            }),
+            'alexrashed/ml-wf-2-train:0.34': ImageState(size={
+                'arm': 519336111,
+                'arm64': 594174340,
+                'amd64': 550683347
+            }),
+            'alexrashed/ml-wf-3-serve:0.34': ImageState(size={
+                'arm': 511888808,
+                'arm64': 590989596,
+                'amd64': 589680790
+            }),
+            'alexrashed/ml-wf-1-pre:0.35': ImageState(size={
+                'arm': 465830200,
+                'arm64': 540391110,
+                'amd64': 533323136
+            }),
+            'alexrashed/ml-wf-2-train:0.35': ImageState(size={
+                'arm': 519336111,
+                'arm64': 594174340,
+                'amd64': 550683347
+            }),
+            'alexrashed/ml-wf-3-serve:0.35': ImageState(size={
+                'arm': 511888808,
+                'arm64': 590989596,
+                'amd64': 589680790
             })
         }
 
@@ -91,6 +121,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+6,
                 'ara-clusterpi3': 1.25e+6,
                 'ara-clusterpi4': 1.25e+6,
+                'ara-clusternuc1': 1.25e+6,
                 'registry': 1.25e+7
             },
             'ara-clustertegra1': {
@@ -100,6 +131,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+7,
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi1': {
@@ -109,6 +141,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+7,
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi2': {
@@ -118,6 +151,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+9,
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi3': {
@@ -127,6 +161,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+7,
                 'ara-clusterpi3': 1.25e+9,
                 'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi4': {
@@ -136,6 +171,17 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi2': 1.25e+7,
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+9,
+                'ara-clusternuc1': 1.25e+7,
+                'registry': 1.25e+7
+            },
+            'ara-clusternuc1': {
+                'ara-clustercloud1': 1.25e+6,
+                'ara-clustertegra1': 1.25e+7,
+                'ara-clusterpi1': 1.25e+7,
+                'ara-clusterpi2': 1.25e+7,
+                'ara-clusterpi3': 1.25e+7,
+                'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+9,
                 'registry': 1.25e+7
             }
         }
