@@ -44,6 +44,12 @@ class KubeClusterContext(ClusterContext):
             # https://github.com/kubernetes-client/python/issues/547
             pass
 
+    def remove_pod_from_node(self, pod: Pod, node: Node):
+        raise NotImplementedError
+
+    def remove_pod_images_from_node(self, pod: Pod, node: Node):
+        raise NotImplementedError
+
     def list_nodes(self):
         # TODO refresh node data but make sure to keep remaining capacities (allocatable)
         # Maybe implement a timeout to not request the data with every single pod placement?
