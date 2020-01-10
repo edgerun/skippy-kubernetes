@@ -52,6 +52,8 @@ class KubeClusterContext(ClusterContext):
         if self.nodes is None:
             self.nodes = create_nodes(self.api.list_node().items)
             self.storage_node = next(node for node in self.nodes if 'data.skippy.io/storage-node' in node.labels)
+            # Filter nodes which should not be considered by Skippy for scheduling (but may contain data)
+            self.nodes = [node for node in self.nodes if 'meta.skippy.io/no-schedule' not in node.labels]
         return self.nodes
 
     def get_init_image_states(self) -> Dict[str, ImageState]:
@@ -92,6 +94,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+6,
                 'ara-clusterpi4': 1.25e+6,
                 'ara-clusternuc1': 1.25e+6,
+                'ara-clusternuc2': 1.25e+6,
                 'registry': 1.25e+7
             },
             'ara-clustertegra1': {
@@ -102,6 +105,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
                 'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi1': {
@@ -112,6 +116,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
                 'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi2': {
@@ -122,6 +127,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
                 'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi3': {
@@ -132,6 +138,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+9,
                 'ara-clusterpi4': 1.25e+7,
                 'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusterpi4': {
@@ -142,6 +149,7 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+9,
                 'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+7,
                 'registry': 1.25e+7
             },
             'ara-clusternuc1': {
@@ -152,6 +160,18 @@ class KubeClusterContext(ClusterContext):
                 'ara-clusterpi3': 1.25e+7,
                 'ara-clusterpi4': 1.25e+7,
                 'ara-clusternuc1': 1.25e+9,
+                'ara-clusternuc2': 1.25e+7,
+                'registry': 1.25e+7
+            },
+            'ara-clusternuc2': {
+                'ara-clustercloud1': 1.25e+6,
+                'ara-clustertegra1': 1.25e+7,
+                'ara-clusterpi1': 1.25e+7,
+                'ara-clusterpi2': 1.25e+7,
+                'ara-clusterpi3': 1.25e+7,
+                'ara-clusterpi4': 1.25e+7,
+                'ara-clusternuc1': 1.25e+7,
+                'ara-clusternuc2': 1.25e+9,
                 'registry': 1.25e+7
             }
         }
