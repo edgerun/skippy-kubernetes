@@ -5,7 +5,6 @@ import logging
 
 from kubernetes import config, watch, client
 from kubernetes.client.rest import ApiException
-from pandas.tests.extension.numpy_.test_numpy_nested import np
 
 from skippy.core.priorities import BalancedResourcePriority, LatencyAwareImageLocalityPriority, LocalityTypePriority, \
     DataLocalityPriority, CapabilityPriority, ImageLocalityPriority
@@ -37,8 +36,7 @@ def main():
     level = logging.DEBUG if args.debug else logging.INFO
     scheduler_name = None if args.scheduler_name == 'None' else args.scheduler_name
     namespace = None if args.namespace == 'None' else args.namespace
-    weights = None if args.weights is None \
-        else [np.float64(x) for x in ast.literal_eval(args.weights)]
+    weights = None if args.weights is None else [float(x) for x in ast.literal_eval(args.weights)]
 
     # Set the log level
     logging.getLogger().setLevel(level)
