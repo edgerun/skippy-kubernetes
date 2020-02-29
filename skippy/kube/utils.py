@@ -2,8 +2,8 @@ from typing import List
 
 from kubernetes.client import V1Pod, V1Container, V1Node
 
-from core.model import Pod, Container, ResourceRequirements, PodSpec, Node, Capacity
-from core.utils import parse_size_string
+from skippy.core.model import Pod, Container, ResourceRequirements, PodSpec, Node, Capacity
+from skippy.core.utils import parse_size_string
 
 
 def create_nodes(v1nodes: List[V1Node]) -> List[Node]:

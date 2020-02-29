@@ -7,12 +7,12 @@ from kubernetes import config, watch, client
 from kubernetes.client.rest import ApiException
 from pandas.tests.extension.numpy_.test_numpy_nested import np
 
-from core.priorities import Priority, BalancedResourcePriority, LatencyAwareImageLocalityPriority, LocalityTypePriority, \
+from skippy.core.priorities import BalancedResourcePriority, LatencyAwareImageLocalityPriority, LocalityTypePriority, \
     DataLocalityPriority, CapabilityPriority, ImageLocalityPriority
-from core.scheduler import Scheduler
-from kube.kubeclustercontext import KubeClusterContext
-from kube.liveness_probe import LivenessProbe
-from kube.utils import create_pod
+from skippy.core.scheduler import Scheduler
+from skippy.kube.kubeclustercontext import KubeClusterContext
+from skippy.kube.liveness_probe import LivenessProbe
+from skippy.kube.utils import create_pod
 
 
 def main():
